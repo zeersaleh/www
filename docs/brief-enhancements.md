@@ -1,7 +1,7 @@
 # Brief Enhancements: Market & Technical Review
 ## Addendum to `content-brief.md` — July 2026
 
-This document reviews the content brief against the market situation as of July 2026 and against technical build realities. It amends the brief; where the two conflict, this document wins. Structure: (1) market corrections and additions, (2) the new KSA service line, (3) technical recommendations, (4) amended build order, (5) open decisions.
+This document reviews the content brief against the market situation as of July 2026 and against technical build realities. It amends the brief; where the two conflict, this document wins. Structure: (1) market corrections and additions, (2) the new KSA service line, (3) technical recommendations, (4) deployment, domain & email, (5) business name candidates, (6) amended build order, (7) open decisions.
 
 ---
 
@@ -109,7 +109,17 @@ The shared multi-step-shell + per-tool config approach is right. Additions:
 - Calendly's terms exclude embargoed regions — mostly moot since the buyers are international, but **Cal.com** (self-hostable) removes the edge case and the third-party dependency; either works.
 - Start WhatsApp with a simple `wa.me` click-to-chat link; adopt the Business API later when volume justifies it. **The number's country code is a positioning signal** (UAE/KSA/EU/Syrian number each say something different) — decide deliberately (§5).
 
-### 3.7 SEO/GEO (extends §5 editorial rules)
+### 3.7 Newsletter subscription (new — amends the sitemap and §7 "Lead capture")
+
+A newsletter is the right retention channel for this audience: the buying cycle for a Syria market entry is months long, and the Regulatory & Market Tracker (§1.1) plus the 180-day certification news cycle give the newsletter a natural, recurring reason to exist. Spec:
+
+- **Placement:** subscription form in the site footer (every page), an inline block at the end of every blog post, and a dedicated `/subscribe` page (add to sitemap). One shared component, bilingual.
+- **Form:** email field + language preference (AR/EN/both) + one button. Nothing else — every extra field costs signups. Turnstile invisible mode for spam.
+- **Flow:** POST to the same leads API route as the tools, stored in the same Postgres leads table with `source='newsletter'` and `locale` — one funnel, one dataset, CRM-ready. **Double opt-in** confirmation email (deliverability + GDPR).
+- **Sending:** use **Resend** (Broadcasts + Audiences) for both the confirmation email and the newsletter itself — one provider for transactional and broadcast, API-first, works cleanly with a Cloudflare-managed domain. Alternatives if a full newsletter UI is wanted later: Buttondown or MailerLite; avoid building sending infrastructure yourself.
+- **Positioning:** name the newsletter as a product, not "our newsletter" — e.g. *"الجسر / The Bridge — a briefing on marketing, AI, and Syria's reconstruction economy."* The tools' email gates should offer a "also subscribe me to the briefing" checkbox (unchecked by default — GDPR).
+
+### 3.8 SEO/GEO (extends §5 editorial rules)
 
 - Structured data throughout: `Organization`, `Service`, `Article`, and `FAQPage` on the explainer posts (the answer-engine pillar depends on this).
 - Per-locale RSS feeds; clean semantic HTML (answer engines reward it more than any trick).
@@ -117,27 +127,76 @@ The shared multi-step-shell + per-tool config approach is right. Additions:
 
 ---
 
-## 4. Amended Build Order (replaces §8)
+## 4. Deployment, Domain & Email (new — the brief's §7 named Railway but no pipeline)
 
-1. Design system + RTL/LTR shell + language toggle + **performance budget in CI** + **`/privacy` + `/terms`** + analytics + **leads table & capture endpoint** (the plumbing everything gates through).
-2. Home + Services (now **five** service pages) + Sectors.
-3. Readiness Scorecard (server-side scoring, shared tool shell).
-4. Insights/blog infrastructure — **decide CMS and slug policy first** — launching with 2–3 posts **including the Regulatory & Market Tracker page**.
-5. Remaining three tools (reuse shell from 3).
-6. Book-a-call + WhatsApp integration.
-7. Quarterly gated report.
+### 4.1 Deploy pipeline (Railway + GitHub)
+
+- **Two Railway environments** in one project, per the brief: `production` and `staging`, each with its own variables and its own Postgres.
+- **Git-driven deploys:** connect the GitHub repo to Railway — `main` auto-deploys to `production`; a `staging` branch auto-deploys to `staging`. Railway PR environments can be enabled later for per-PR previews.
+- **CI gate before deploy:** a GitHub Actions workflow on every push/PR running lint, typecheck, build, and a Lighthouse CI check against the performance budget (§3.3). Nothing merges to `main` red.
+- **Next.js on Railway:** use `output: 'standalone'` in `next.config` so Railway's builder produces a small image; set a health-check path (`/api/health`) in the Railway service so failed deploys never take traffic.
+- **Rollback:** Railway keeps previous deployments — one-click rollback; no extra tooling needed.
+- **Staging protection:** put staging behind Cloudflare Access (free for a few users) or basic auth, and send `X-Robots-Tag: noindex` — an indexed staging site would split SEO with production.
+
+### 4.2 Domain & DNS (Cloudflare)
+
+- Register the domain on **Cloudflare Registrar** (at-cost pricing, DNS in the same place).
+- Point the apex/`www` at the Railway service via **proxied (orange-cloud) CNAME records** — this is what activates Cloudflare's CDN/edge caching recommended in §3.1. Set SSL/TLS mode to **Full (strict)**; Railway provides the origin certificate automatically.
+- Add a **Cloudflare cache rule** for `/_next/static/*` and image assets (cache everything, long TTL — these are content-hashed and safe to cache forever).
+- Use a subdomain for staging (`staging.<domain>`) with its own Railway custom domain, kept behind Access as above.
+
+### 4.3 Email (Cloudflare receive + Resend send)
+
+Cloudflare **Email Routing is receive/forward only** — it gives you `hello@<domain>` forwarding to Gmail for free, but it cannot send. So:
+
+- **Receiving:** Cloudflare Email Routing → forward `hello@`/`salam@` to the existing Gmail inbox. (For send-as-domain replies from Gmail, add the domain via Gmail's "send mail as" with Resend SMTP or upgrade to Workspace later.)
+- **Sending (newsletter, double opt-in, tool results):** **Resend** with the domain verified — add its **SPF, DKIM, and DMARC** records in Cloudflare DNS on day one; without them the newsletter lands in spam, especially at Gulf corporate mail gateways. Send from a subdomain (`mail.<domain>` or `news.<domain>`) so newsletter reputation never contaminates the root domain.
+- Set **DMARC to `p=quarantine`** after a couple of clean weeks — investor-facing domains are spoofing targets, and a published DMARC policy is itself a small trust signal.
 
 ---
 
-## 5. Open Decisions (for the owner)
+## 5. Business Name Candidates
+
+Criteria: pronounceable and meaningful in both Arabic and English; carries the bridge/guidance positioning rather than generic "AI marketing"; no negative reading in either language; `.com` obtainable. DNS checks were run July 2026 — "appears unregistered" means no NS/A record was found, which is a strong but not conclusive signal; **verify in Cloudflare Registrar before committing.**
+
+| Candidate | Arabic | Meaning / why it fits | .com status (checked) |
+|---|---|---|---|
+| **Jisr Advisory** ⭐ | جسر | "Bridge" — literally the diaspora-bridge and investor-bridge positioning; short, easy for English speakers ("JISS-r") | `jisradvisory.com` appears unregistered |
+| **Jisr Strategy** | جسر | Same root, "strategy" reads more consulting than "advisory" | `jisrstrategy.com` appears unregistered |
+| **Levant Bridge** | جسر الشام | English-first variant; instantly legible geography for Western investors, pairs naturally with the "Gulf & Levant" report brand | `levantbridge.com` appears unregistered |
+| **Masar Levant** | مسار | "Masar" = path/trajectory; qualifier needed since bare Masar names are widely used | `masarlevant.com` appears unregistered |
+| **Nahda Bridge** | نهضة | "Nahda" = renaissance/awakening — historically resonant, reconstruction connotation | `nahdabridge.com` appears unregistered |
+
+Taken/avoid: `masarstrategy.com`, `masaradvisory.com`, `manarastrategy.com` resolve already; **Manara** also collides with a known MENA tech-talent brand; **Bawsala** (compass) collides with a prominent Tunisian NGO; anything with **"Sham"** (الشام) reads as English "sham" (fake) — disqualifying for a trust-first brand.
+
+**Recommendation: Jisr Advisory** (`jisradvisory.com`), newsletter branded *"الجسر / The Bridge."* One name system covers the consultancy, the newsletter, and the diaspora-bridge service line. Naming the newsletter after the company's own metaphor compounds the brand instead of splitting it.
+
+---
+
+## 6. Amended Build Order (replaces §8)
+
+0. **Foundation ops (before any code ships):** register domain on Cloudflare Registrar → DNS + Email Routing + Resend domain verification (SPF/DKIM/DMARC) → Railway project with `staging`/`production` environments wired to the GitHub repo → CI workflow with the performance budget.
+1. Design system + RTL/LTR shell + language toggle + **`/privacy` + `/terms`** + analytics + **leads table & capture endpoint + newsletter subscription component** (footer/`/subscribe`; the plumbing everything gates through).
+2. Home + Services (now **five** service pages) + Sectors.
+3. Readiness Scorecard (server-side scoring, shared tool shell).
+4. Insights/blog infrastructure — **decide CMS and slug policy first** — launching with 2–3 posts **including the Regulatory & Market Tracker page**, with the end-of-post newsletter block.
+5. Remaining three tools (reuse shell from 3).
+6. Book-a-call + WhatsApp integration.
+7. Quarterly gated report + first newsletter sends.
+
+---
+
+## 7. Open Decisions (for the owner)
 
 | Decision | Options | Lean |
 |---|---|---|
+| **Business name** | §5 shortlist | **Jisr Advisory** (`jisradvisory.com`) — verify availability in Cloudflare Registrar, then register before publicizing anything |
 | CMS | Git-based MDX (founder-operated) vs headless CMS with RTL editor (if non-technical Arabic editors join) | MDX now; revisit when a second editor exists |
 | WhatsApp number country code | UAE / KSA / EU / Syria | Depends on where the entity is registered — decide with positioning in mind |
 | Slug policy | Arabic-script slugs vs transliterated | Arabic-script (better Arabic SEO), unless ops friction proves too high |
 | Sixth sector page | Add banking & financial services | Add — early movers are banks |
 | KSA enterprise route | Stay remote/SME vs local partner/MISA entity | Stay remote for year one; revisit on first enterprise pull |
+| Newsletter platform | Resend Broadcasts (API-first) vs Buttondown/MailerLite (managed UI) | Resend — one provider for transactional + broadcast, leads stay in your own Postgres |
 
 ---
 
