@@ -104,7 +104,11 @@ export default async function LocaleLayout({
     description: dict.brand.tagline,
     knowsLanguage: ["en", "ar"],
     areaServed: ["Syria", "Saudi Arabia", "Gulf Cooperation Council"],
-    sameAs: [socialLinks.linkedin, socialLinks.x],
+    sameAs: [
+      socialLinks.linkedin,
+      socialLinks.x,
+      socialLinks.linkedinNewsletter,
+    ],
     founder: {
       "@type": "Person",
       name: founderName.en,

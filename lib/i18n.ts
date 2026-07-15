@@ -34,6 +34,8 @@ export const whatsappNumber =
 export const socialLinks = {
   linkedin: "https://www.linkedin.com/in/salehzeer/",
   x: "https://x.com/Saleh_Zeer_",
+  linkedinNewsletter:
+    "https://www.linkedin.com/newsletters/tibyan-%D8%AA%D8%A8%D9%8A%D8%A7%D9%86-7137341583208726528/",
 };
 
 export const founderName: Localized = {

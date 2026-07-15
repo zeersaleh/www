@@ -4,6 +4,7 @@ import { getDictionary } from "@/content/dictionary";
 import NewsletterForm from "@/components/NewsletterForm";
 import CookiePrefsLink from "@/components/CookiePrefsLink";
 import BrandMark from "@/components/BrandMark";
+import LinkedInNewsletterLink from "@/components/LinkedInNewsletterLink";
 
 export default function Footer({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
@@ -60,6 +61,10 @@ export default function Footer({ locale }: { locale: Locale }) {
           <div className="mt-4">
             <NewsletterForm locale={locale} labels={dict.newsletter} />
           </div>
+          <LinkedInNewsletterLink
+            orFollowLabel={dict.newsletter.orFollow}
+            ctaLabel={dict.newsletter.linkedinCta}
+          />
         </div>
 
         <nav className="text-sm">

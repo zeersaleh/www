@@ -120,6 +120,8 @@ const en = {
     success: "You're on the list — thank you.",
     pending: "Almost there — check your inbox to confirm your subscription.",
     error: "Subscription failed. Please try again.",
+    orFollow: "Prefer LinkedIn?",
+    linkedinCta: "Follow the Briefing on LinkedIn",
   },
   contact: {
     heading: "Contact",
@@ -298,6 +300,8 @@ const ar: typeof en = {
     success: "تم اشتراكك — شكرًا لك.",
     pending: "بقيت خطوة — تفقّد بريدك لتأكيد الاشتراك.",
     error: "تعذّر الاشتراك. يرجى المحاولة مجددًا.",
+    orFollow: "تفضّل لينكد إن؟",
+    linkedinCta: "تابع نشرة تبيان على لينكد إن",
   },
   contact: {
     heading: "تواصل معنا",

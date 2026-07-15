@@ -3,6 +3,7 @@ import { isLocale, type Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
 import { getDictionary } from "@/content/dictionary";
 import NewsletterForm from "@/components/NewsletterForm";
+import LinkedInNewsletterLink from "@/components/LinkedInNewsletterLink";
 
 export async function generateMetadata({
   params,
@@ -38,6 +39,10 @@ export default async function SubscribePage({
       </p>
       <div className="mt-8 rounded-xl bg-navy-950 p-6">
         <NewsletterForm locale={locale} labels={dict.newsletter} />
+        <LinkedInNewsletterLink
+          orFollowLabel={dict.newsletter.orFollow}
+          ctaLabel={dict.newsletter.linkedinCta}
+        />
       </div>
     </section>
   );

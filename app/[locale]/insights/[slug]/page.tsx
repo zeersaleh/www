@@ -6,6 +6,7 @@ import { getDictionary } from "@/content/dictionary";
 import { getAllPosts, getPost } from "@/lib/posts";
 import CtaBand from "@/components/CtaBand";
 import NewsletterForm from "@/components/NewsletterForm";
+import LinkedInNewsletterLink from "@/components/LinkedInNewsletterLink";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
@@ -100,6 +101,10 @@ export default async function PostPage({
           <div className="mt-4">
             <NewsletterForm locale={locale} labels={dict.newsletter} />
           </div>
+          <LinkedInNewsletterLink
+            orFollowLabel={dict.newsletter.orFollow}
+            ctaLabel={dict.newsletter.linkedinCta}
+          />
         </div>
       </article>
       <CtaBand locale={locale} />
