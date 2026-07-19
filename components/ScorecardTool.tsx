@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import {
-  scorecardQuestions,
+  scorecardVariants,
   type ScorecardAnswers,
+  type ScorecardVariantId,
 } from "@/lib/scorecard-config";
 import type { Dictionary } from "@/content/dictionary";
 
@@ -18,9 +19,11 @@ interface ResultPayload {
 export default function ScorecardTool({
   locale,
   labels,
+  variant = "readiness",
 }: {
   locale: Locale;
   labels: Dictionary["tools"];
+  variant?: ScorecardVariantId;
 }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<ScorecardAnswers>({});
@@ -30,9 +33,10 @@ export default function ScorecardTool({
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ResultPayload | null>(null);
 
-  const total = scorecardQuestions.length;
+  const questions = scorecardVariants[variant].questions;
+  const total = questions.length;
   const atEmailGate = step === total;
-  const question = scorecardQuestions[step];
+  const question = questions[step];
 
   function choose(value: string) {
     setAnswers((prev) => ({ ...prev, [question.id]: value }));
@@ -47,7 +51,7 @@ export default function ScorecardTool({
       const res = await fetch("/api/tools/score", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ answers, email, locale, subscribe }),
+        body: JSON.stringify({ tool: variant, answers, email, locale, subscribe }),
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as {

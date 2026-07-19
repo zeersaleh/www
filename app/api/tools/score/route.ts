@@ -1,10 +1,15 @@
 import { isLocale } from "@/lib/i18n";
 import { isValidEmail, saveLead, verifyTurnstile } from "@/lib/leads";
-import { scorecardQuestions } from "@/lib/scorecard-config";
+import {
+  isScorecardVariantId,
+  scorecardVariants,
+  type ScorecardVariantId,
+} from "@/lib/scorecard-config";
 import { scoreAnswers } from "@/lib/scorecard-scoring";
 
 export async function POST(request: Request) {
   let body: {
+    tool?: string;
     answers?: Record<string, string>;
     email?: string;
     locale?: string;
@@ -17,6 +22,14 @@ export async function POST(request: Request) {
     return Response.json({ error: "invalid-body" }, { status: 400 });
   }
 
+  // Older clients predate variants and send no tool field.
+  const tool = body.tool ?? "readiness";
+  if (!isScorecardVariantId(tool)) {
+    return Response.json({ error: "unknown-tool" }, { status: 400 });
+  }
+  const variant: ScorecardVariantId = tool;
+  const questions = scorecardVariants[variant].questions;
+
   const locale = body.locale && isLocale(body.locale) ? body.locale : "en";
   const email = body.email?.trim().toLowerCase() ?? "";
   if (!isValidEmail(email)) {
@@ -28,7 +41,7 @@ export async function POST(request: Request) {
 
   // Only accept known question ids with known option values.
   const answers: Record<string, string> = {};
-  for (const question of scorecardQuestions) {
+  for (const question of questions) {
     const value = body.answers?.[question.id];
     if (
       typeof value === "string" &&
@@ -37,15 +50,15 @@ export async function POST(request: Request) {
       answers[question.id] = value;
     }
   }
-  if (Object.keys(answers).length < scorecardQuestions.length) {
+  if (Object.keys(answers).length < questions.length) {
     return Response.json({ error: "incomplete-answers" }, { status: 400 });
   }
 
-  const result = scoreAnswers(answers, locale);
+  const result = scoreAnswers(variant, answers, locale);
 
   // Capture the lead before returning results — the gate is server-side.
   await saveLead({
-    source: "scorecard",
+    source: variant === "workflow" ? "workflow-scorecard" : "scorecard",
     email,
     locale,
     payload: {
@@ -60,7 +73,7 @@ export async function POST(request: Request) {
       source: "newsletter",
       email,
       locale,
-      payload: { via: "scorecard" },
+      payload: { via: variant === "workflow" ? "workflow-scorecard" : "scorecard" },
     });
   }
 

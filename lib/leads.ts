@@ -1,7 +1,11 @@
 import "server-only";
 import { Pool } from "pg";
 
-export type LeadSource = "newsletter" | "scorecard" | "contact";
+export type LeadSource =
+  | "newsletter"
+  | "scorecard"
+  | "workflow-scorecard"
+  | "contact";
 
 export interface Lead {
   source: LeadSource;

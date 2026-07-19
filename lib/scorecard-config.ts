@@ -11,9 +11,7 @@ export interface ScorecardQuestion {
   options: ScorecardOption[];
 }
 
-export const SCORECARD_MODEL_VERSION = "v1";
-
-export const scorecardQuestions: ScorecardQuestion[] = [
+const readinessQuestions: ScorecardQuestion[] = [
   {
     id: "sector",
     label: { en: "Which sector are you entering?", ar: "أي قطاع تدخل؟" },
@@ -123,7 +121,7 @@ export const scorecardQuestions: ScorecardQuestion[] = [
 
 export type ScorecardAnswers = Record<string, string>;
 
-export const scorecardDimensions = [
+const readinessDimensions: ScorecardDimension[] = [
   { id: "data", label: { en: "Data readiness", ar: "جاهزية البيانات" } },
   {
     id: "stakeholder",
@@ -134,6 +132,149 @@ export const scorecardDimensions = [
     id: "localization",
     label: { en: "Brand localization", ar: "توطين العلامة" },
   },
-] as const;
+];
 
-export type DimensionId = (typeof scorecardDimensions)[number]["id"];
+const workflowQuestions: ScorecardQuestion[] = [
+  {
+    id: "team-size",
+    label: { en: "How large is your marketing team?", ar: "ما حجم فريقكم التسويقي؟" },
+    options: [
+      { value: "1-5", label: { en: "1–5 people", ar: "من 1 إلى 5 أشخاص" } },
+      { value: "6-15", label: { en: "6–15 people", ar: "من 6 إلى 15 شخصًا" } },
+      { value: "16-plus", label: { en: "16 or more", ar: "16 شخصًا أو أكثر" } },
+    ],
+  },
+  {
+    id: "ai-usage",
+    label: {
+      en: "How does your team use AI today?",
+      ar: "كيف يستخدم فريقكم الذكاء الاصطناعي اليوم؟",
+    },
+    options: [
+      { value: "none", label: { en: "Not at all", ar: "لا يستخدمه إطلاقًا" } },
+      { value: "adhoc", label: { en: "Ad hoc — individuals use chat tools on their own", ar: "استخدام فردي متفرق لأدوات المحادثة" } },
+      { value: "piloted", label: { en: "Structured pilots in parts of the workflow", ar: "تجارب منظمة في أجزاء من سير العمل" } },
+      { value: "embedded", label: { en: "Embedded in daily production", ar: "مدمج في الإنتاج اليومي" } },
+    ],
+  },
+  {
+    id: "briefing-process",
+    label: {
+      en: "How are campaigns briefed and approved?",
+      ar: "كيف تُسنَد الحملات وتُعتمد؟",
+    },
+    options: [
+      { value: "informal", label: { en: "Informally — email and chat", ar: "بشكل غير رسمي — بريد ومراسلات" } },
+      { value: "documented", label: { en: "Documented briefs, manual approvals", ar: "موجزات موثّقة واعتمادات يدوية" } },
+      { value: "systematic", label: { en: "Standardized briefs and an approval workflow", ar: "موجزات موحّدة ومسار اعتماد واضح" } },
+    ],
+  },
+  {
+    id: "arabic-production",
+    label: {
+      en: "How is your Arabic content produced?",
+      ar: "كيف يُنتَج محتواكم العربي؟",
+    },
+    options: [
+      { value: "translated", label: { en: "Translated from English", ar: "يُترجم عن الإنجليزية" } },
+      { value: "mixed", label: { en: "A mix of translation and native drafting", ar: "مزيج من الترجمة والكتابة الأصيلة" } },
+      { value: "native", label: { en: "Drafted natively in Arabic", ar: "يُكتب بالعربية أصلًا" } },
+    ],
+  },
+  {
+    id: "arabic-review",
+    label: {
+      en: "Who reviews AI-generated Arabic before it is published?",
+      ar: "من يراجع العربية المولَّدة بالذكاء الاصطناعي قبل النشر؟",
+    },
+    options: [
+      { value: "none", label: { en: "No one — it goes out as generated", ar: "لا أحد — تُنشر كما وُلّدت" } },
+      { value: "adhoc", label: { en: "Whoever is available", ar: "من يكون متاحًا وقتها" } },
+      { value: "native-editor", label: { en: "A designated native-Arabic editor", ar: "محرر معيّن لغته الأم العربية" } },
+    ],
+  },
+  {
+    id: "ai-policy",
+    label: {
+      en: "Do you have rules for AI tools and data handling?",
+      ar: "هل لديكم قواعد لأدوات الذكاء الاصطناعي ومعالجة البيانات؟",
+    },
+    options: [
+      { value: "none", label: { en: "No rules yet", ar: "لا قواعد بعد" } },
+      { value: "informal", label: { en: "Informal guidance", ar: "إرشادات غير رسمية" } },
+      { value: "formal", label: { en: "A written policy the team follows", ar: "سياسة مكتوبة يلتزم بها الفريق" } },
+    ],
+  },
+  {
+    id: "data-sensitivity",
+    label: {
+      en: "Does campaign work involve customer or regulated data?",
+      ar: "هل يتعامل عمل الحملات مع بيانات عملاء أو بيانات خاضعة للتنظيم؟",
+    },
+    options: [
+      { value: "no", label: { en: "No", ar: "لا" } },
+      { value: "yes-uncontrolled", label: { en: "Yes — handled case by case", ar: "نعم — تُعالج حالة بحالة" } },
+      { value: "yes-controlled", label: { en: "Yes — with defined controls", ar: "نعم — بضوابط محددة" } },
+    ],
+  },
+  {
+    id: "measurement",
+    label: {
+      en: "How do you measure campaign performance?",
+      ar: "كيف تقيسون أداء الحملات؟",
+    },
+    options: [
+      { value: "none", label: { en: "Rarely, or after the fact", ar: "نادرًا، أو بعد انتهاء الحملة" } },
+      { value: "channel", label: { en: "Channel dashboards, no shared KPIs", ar: "لوحات لكل قناة دون مؤشرات مشتركة" } },
+      { value: "unified", label: { en: "Shared KPIs reviewed on a cadence", ar: "مؤشرات مشتركة تُراجع دوريًا" } },
+    ],
+  },
+];
+
+const workflowDimensions: ScorecardDimension[] = [
+  {
+    id: "workflow",
+    label: { en: "Workflow maturity", ar: "نضج سير العمل" },
+  },
+  {
+    id: "arabic",
+    label: { en: "Arabic output quality", ar: "جودة المخرجات العربية" },
+  },
+  {
+    id: "governance",
+    label: { en: "Governance & data handling", ar: "الحوكمة ومعالجة البيانات" },
+  },
+  { id: "measurement", label: { en: "Measurement", ar: "القياس" } },
+];
+
+export interface ScorecardDimension {
+  id: string;
+  label: Localized;
+}
+
+export interface ScorecardVariantConfig {
+  modelVersion: string;
+  questions: ScorecardQuestion[];
+  dimensions: ScorecardDimension[];
+}
+
+export const scorecardVariants = {
+  readiness: {
+    modelVersion: "v1",
+    questions: readinessQuestions,
+    dimensions: readinessDimensions,
+  },
+  workflow: {
+    modelVersion: "workflow-v1",
+    questions: workflowQuestions,
+    dimensions: workflowDimensions,
+  },
+} satisfies Record<string, ScorecardVariantConfig>;
+
+export type ScorecardVariantId = keyof typeof scorecardVariants;
+
+export function isScorecardVariantId(
+  value: string
+): value is ScorecardVariantId {
+  return value in scorecardVariants;
+}
