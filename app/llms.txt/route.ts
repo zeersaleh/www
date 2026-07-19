@@ -118,6 +118,7 @@ ${postLines}
 ## Tools
 
 ${entry(dict.tools.scorecardTitle, `${siteUrl}/en/tools/readiness-scorecard`, dict.tools.scorecardDesc)}
+${entry(dict.tools.workflowTitle, `${siteUrl}/en/tools/workflow-scorecard`, dict.tools.workflowDesc)}
 ${entry("All tools", `${siteUrl}/en/tools`, "Interactive, evidence-based instruments.")}
 
 ## Company
@@ -151,6 +152,7 @@ ${arPostLines}
 ## Tools (الأدوات بالعربية)
 
 ${entry(dictAr.tools.scorecardTitle, `${siteUrl}/ar/tools/readiness-scorecard`, dictAr.tools.scorecardDesc)}
+${entry(dictAr.tools.workflowTitle, `${siteUrl}/ar/tools/workflow-scorecard`, dictAr.tools.workflowDesc)}
 
 ## Optional
 

@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/sectors",
     "/tools",
     "/tools/readiness-scorecard",
+    "/tools/workflow-scorecard",
     "/insights",
     "/subscribe",
     "/book-a-call",

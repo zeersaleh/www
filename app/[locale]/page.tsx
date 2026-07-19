@@ -36,7 +36,7 @@ export default async function HomePage({
     {
       key: "gulf",
       copy: dict.gulfRoute,
-      primaryHref: `/${locale}/book-a-call`,
+      primaryHref: `/${locale}/tools/workflow-scorecard`,
       landingHref: `/${locale}/gulf-marketing-ai`,
     },
   ];

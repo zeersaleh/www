@@ -83,7 +83,7 @@ export default async function GulfMarketingAiPage({
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href={`/${locale}/book-a-call`}
+              href={`/${locale}/tools/workflow-scorecard`}
               className="rounded-md bg-gold-500 px-5 py-3 text-sm font-semibold text-navy-950 hover:bg-gold-300"
             >
               {dict.gulfRoute.cta}
@@ -184,17 +184,17 @@ export default async function GulfMarketingAiPage({
       {/* Diagnostic */}
       <section className="mx-auto max-w-6xl px-4 py-16">
         <Link
-          href={`/${locale}/book-a-call`}
+          href={`/${locale}/tools/workflow-scorecard`}
           className="group block rounded-xl border-2 border-gold-500 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
         >
           <h2 className="text-2xl font-semibold text-navy-900 group-hover:text-gold-600">
-            {dict.gulfRoute.diagnosticHeading}
+            {dict.tools.workflowTitle}
           </h2>
           <p className="mt-2 max-w-2xl leading-relaxed text-ink-600">
-            {dict.gulfRoute.diagnosticBody}
+            {dict.tools.workflowDesc}
           </p>
           <span className="mt-4 inline-block rounded-md bg-navy-900 px-5 py-2 text-sm font-semibold text-sand-50">
-            {dict.hero.secondaryCta}
+            {dict.tools.startTool}
           </span>
         </Link>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -255,9 +255,8 @@ export default async function GulfMarketingAiPage({
         locale={locale}
         heading={dict.gulfRoute.diagnosticHeading}
         sub={dict.gulfRoute.diagnosticBody}
-        primaryHref={`/${locale}/book-a-call`}
+        primaryHref={`/${locale}/tools/workflow-scorecard`}
         primaryLabel={dict.gulfRoute.cta}
-        showSecondary={false}
       />
     </>
   );

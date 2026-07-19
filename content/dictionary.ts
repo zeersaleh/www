@@ -161,6 +161,12 @@ const en = {
     scorecardTitle: "Syria Market-Entry Readiness Scorecard",
     scorecardDesc:
       "A 0–100 readiness score across data, stakeholder communications, local trust, and brand localization — with your risks flagged in plain language.",
+    workflowTitle: "Marketing Workflow Scorecard",
+    workflowDesc:
+      "A 0–100 score of your marketing team's AI readiness across workflow maturity, Arabic output quality, governance and data handling, and measurement — with your gaps flagged in plain language.",
+    workflowYourScore: "Your workflow score",
+    workflowMethodologyNote:
+      "Scores are computed with the Tibyan workflow model v1. Every weighting is documented — ask us and we'll walk you through it.",
     comingSoon: "Coming soon",
     roiTitle: "AI Marketing ROI Calculator",
     roiDesc:
@@ -428,6 +434,12 @@ const ar: typeof en = {
     scorecardTitle: "مؤشر الجاهزية لدخول السوق السورية",
     scorecardDesc:
       "درجة جاهزية من 0 إلى 100 عبر أربعة أبعاد: البيانات، واتصالات أصحاب المصلحة، والثقة المحلية، وتوطين العلامة — مع مخاطرك مشروحة بلغة واضحة.",
+    workflowTitle: "مؤشر سير العمل التسويقي",
+    workflowDesc:
+      "درجة من 0 إلى 100 لجاهزية فريقكم التسويقي للذكاء الاصطناعي عبر أربعة أبعاد: نضج سير العمل، وجودة المخرجات العربية، والحوكمة ومعالجة البيانات، والقياس — مع فجواتكم مشروحة بلغة واضحة.",
+    workflowYourScore: "درجة سير عملكم",
+    workflowMethodologyNote:
+      "تُحسب الدرجات بنموذج تبيان لسير العمل، الإصدار الأول. كل وزن موثّق — اسألنا ونشرح لك المنهجية كاملة.",
     comingSoon: "قريبًا",
     roiTitle: "حاسبة عائد التسويق بالذكاء الاصطناعي",
     roiDesc:
