@@ -95,6 +95,11 @@ ${dict.hero.credibility}
 
 Founder: ${founderName.en} · Contact: ${contactEmail} · English pages first, Arabic pages in the sections marked (العربية) below. Full article text: [llms-full.txt](${siteUrl}/llms-full.txt).
 
+## Routes
+
+${entry(dict.syriaRoute.heading, `${siteUrl}/en/entering-syria`, dict.syriaRoute.sub)}
+${entry(dict.gulfRoute.heading, `${siteUrl}/en/gulf-marketing-ai`, dict.gulfRoute.sub)}
+
 ## Services
 
 ${entry(dict.sections.allServices, `${siteUrl}/en/services`, "Overview of all service lines.")}
@@ -113,6 +118,7 @@ ${postLines}
 ## Tools
 
 ${entry(dict.tools.scorecardTitle, `${siteUrl}/en/tools/readiness-scorecard`, dict.tools.scorecardDesc)}
+${entry(dict.tools.workflowTitle, `${siteUrl}/en/tools/workflow-scorecard`, dict.tools.workflowDesc)}
 ${entry("All tools", `${siteUrl}/en/tools`, "Interactive, evidence-based instruments.")}
 
 ## Company
@@ -122,6 +128,11 @@ ${entry("Book a Call", `${siteUrl}/en/book-a-call`, "Schedule an introductory co
 ${entry("Contact", `${siteUrl}/en/contact`, "Get in touch with the team.")}
 ${entry("LinkedIn", socialLinks.linkedin)}
 ${entry("X (Twitter)", socialLinks.x)}
+
+## Routes (المسارات بالعربية)
+
+${entry(dictAr.syriaRoute.heading, `${siteUrl}/ar/entering-syria`, dictAr.syriaRoute.sub)}
+${entry(dictAr.gulfRoute.heading, `${siteUrl}/ar/gulf-marketing-ai`, dictAr.gulfRoute.sub)}
 
 ## Services (الخدمات بالعربية)
 
@@ -141,6 +152,7 @@ ${arPostLines}
 ## Tools (الأدوات بالعربية)
 
 ${entry(dictAr.tools.scorecardTitle, `${siteUrl}/ar/tools/readiness-scorecard`, dictAr.tools.scorecardDesc)}
+${entry(dictAr.tools.workflowTitle, `${siteUrl}/ar/tools/workflow-scorecard`, dictAr.tools.workflowDesc)}
 
 ## Optional
 

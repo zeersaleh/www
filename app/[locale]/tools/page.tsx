@@ -38,20 +38,36 @@ export default async function ToolsPage({
         </h1>
         <p className="mt-2 max-w-2xl text-ink-600">{dict.tools.sub}</p>
 
-        <Link
-          href={`/${locale}/tools/readiness-scorecard`}
-          className="group mt-10 block rounded-xl border-2 border-gold-500 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
-        >
-          <h2 className="text-2xl font-semibold text-navy-900 group-hover:text-gold-600">
-            {dict.tools.scorecardTitle}
-          </h2>
-          <p className="mt-2 max-w-2xl leading-relaxed text-ink-600">
-            {dict.tools.scorecardDesc}
-          </p>
-          <span className="mt-4 inline-block rounded-md bg-navy-900 px-5 py-2 text-sm font-semibold text-sand-50">
-            {dict.tools.startTool}
-          </span>
-        </Link>
+        <div className="mt-10 grid gap-4 lg:grid-cols-2">
+          {[
+            {
+              href: `/${locale}/tools/readiness-scorecard`,
+              title: dict.tools.scorecardTitle,
+              desc: dict.tools.scorecardDesc,
+            },
+            {
+              href: `/${locale}/tools/workflow-scorecard`,
+              title: dict.tools.workflowTitle,
+              desc: dict.tools.workflowDesc,
+            },
+          ].map((tool) => (
+            <Link
+              key={tool.href}
+              href={tool.href}
+              className="group block rounded-xl border-2 border-gold-500 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            >
+              <h2 className="text-2xl font-semibold text-navy-900 group-hover:text-gold-600">
+                {tool.title}
+              </h2>
+              <p className="mt-2 max-w-2xl leading-relaxed text-ink-600">
+                {tool.desc}
+              </p>
+              <span className="mt-4 inline-block rounded-md bg-navy-900 px-5 py-2 text-sm font-semibold text-sand-50">
+                {dict.tools.startTool}
+              </span>
+            </Link>
+          ))}
+        </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {upcoming.map((tool) => (
